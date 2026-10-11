@@ -18,20 +18,27 @@ export const products = [
       {
         id: 'og1',
         name: 'Suppléments',
+        translationKey: 'supplements',
         options: [
-          { id: 'o1', name: 'Extra fromage', price_supplement: 100 },
-          { id: 'o2', name: 'Poulet', price_supplement: 150 },
-          { id: 'o3', name: 'Chorizo', price_supplement: 120 },
+          { id: 'o1', name: 'Extra fromage', translationKey: 'extra_cheese', price_supplement: 100 },
+          { id: 'o2', name: 'Poulet', translationKey: 'chicken', price_supplement: 150 },
+          { id: 'o3', name: 'Chorizo', translationKey: 'chorizo', price_supplement: 120 },
         ],
       },
       {
         id: 'og2',
         name: 'Sans',
+        translationKey: 'without',
         options: [
-          { id: 'o4', name: 'Sans oignons', price_supplement: 0 },
-          { id: 'o5', name: 'Sans olives', price_supplement: 0 },
+          { id: 'o4', name: 'Sans oignons', translationKey: 'no_onions', price_supplement: 0 },
+          { id: 'o5', name: 'Sans olives', translationKey: 'no_olives', price_supplement: 0 },
         ],
       },
+    ],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
     ],
   },
   {
@@ -49,6 +56,11 @@ export const products = [
       { id: 'v6', name: 'large', price_override: 550 },
     ],
     optionGroups: [],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
+    ],
   },
   {
     id: '3',
@@ -68,11 +80,17 @@ export const products = [
       {
         id: 'og4',
         name: 'Suppléments',
+        translationKey: 'supplements',
         options: [
-          { id: 'o8', name: 'Extra fromage', price_supplement: 100 },
-          { id: 'o9', name: 'Double poulet', price_supplement: 150 },
+          { id: 'o8', name: 'Extra fromage', translationKey: 'extra_cheese', price_supplement: 100 },
+          { id: 'o9', name: 'Double poulet', translationKey: 'double_chicken', price_supplement: 150 },
         ],
       },
+    ],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
     ],
   },
   {
@@ -93,11 +111,17 @@ export const products = [
       {
         id: 'og5',
         name: 'Suppléments',
+        translationKey: 'supplements',
         options: [
-          { id: 'o10', name: 'Extra fromage', price_supplement: 100 },
-          { id: 'o11', name: 'Double viande', price_supplement: 180 },
+          { id: 'o10', name: 'Extra fromage', translationKey: 'extra_cheese', price_supplement: 100 },
+          { id: 'o11', name: 'Double viande', translationKey: 'double_meat', price_supplement: 180 },
         ],
       },
+    ],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
     ],
   },
   {
@@ -118,10 +142,16 @@ export const products = [
       {
         id: 'og6',
         name: 'Suppléments',
+        translationKey: 'supplements',
         options: [
-          { id: 'o12', name: 'Extra fromage', price_supplement: 120 },
+          { id: 'o12', name: 'Extra fromage', translationKey: 'extra_cheese', price_supplement: 120 },
         ],
       },
+    ],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
     ],
   },
   {
@@ -142,11 +172,17 @@ export const products = [
       {
         id: 'og7',
         name: 'Suppléments',
+        translationKey: 'supplements',
         options: [
-          { id: 'o13', name: 'Extra fromage', price_supplement: 80 },
-          { id: 'o14', name: 'Bacon', price_supplement: 100 },
+          { id: 'o13', name: 'Extra fromage', translationKey: 'extra_cheese', price_supplement: 80 },
+          { id: 'o14', name: 'Bacon', translationKey: 'bacon', price_supplement: 100 },
         ],
       },
+    ],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
     ],
   },
   {
@@ -167,11 +203,17 @@ export const products = [
       {
         id: 'og8',
         name: 'Suppléments',
+        translationKey: 'supplements',
         options: [
-          { id: 'o15', name: 'Bacon', price_supplement: 100 },
-          { id: 'o16', name: 'Œuf au plat', price_supplement: 80 },
+          { id: 'o15', name: 'Bacon', translationKey: 'bacon', price_supplement: 100 },
+          { id: 'o16', name: 'Œuf au plat', translationKey: 'egg', price_supplement: 80 },
         ],
       },
+    ],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
     ],
   },
   {
@@ -192,24 +234,35 @@ export const products = [
       {
         id: 'og9',
         name: 'Suppléments',
+        translationKey: 'supplements',
         options: [
-          { id: 'o17', name: 'Fromage', price_supplement: 80 },
-          { id: 'o18', name: 'Bacon', price_supplement: 100 },
+          { id: 'o17', name: 'Fromage', translationKey: 'cheese', price_supplement: 80 },
+          { id: 'o18', name: 'Bacon', translationKey: 'bacon', price_supplement: 100 },
         ],
       },
+    ],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
     ],
   },
   {
     id: '9',
-    name: 'Panini Jambon',
-    displayName: 'Jambon Fromage',
+    name: 'Panini Poulet',
+    displayName: 'Poulet',
     translationKey: 'panini_jambon',
-    description: 'Jambon, fromage, tomate, pesto',
+    description: 'Poulet, fromage, tomate, pesto',
     base_price: 280,
     image: '/images/placeholder.svg',
     category: 'paninis',
     variants: [],
     optionGroups: [],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
+    ],
   },
   {
     id: '10',
@@ -222,6 +275,11 @@ export const products = [
     category: 'sides',
     variants: [],
     optionGroups: [],
+    drinks: [
+      { id: 'd1', name: 'Coca-Cola', translationKey: 'coca_cola', price: 50 },
+      { id: 'd2', name: 'Hamoud Boualem', translationKey: 'hamoud_boualem', price: 60 },
+      { id: 'd3', name: 'Eau minérale', translationKey: 'water', price: 30 },
+    ],
   },
   {
     id: '11',
@@ -234,6 +292,7 @@ export const products = [
     category: 'drinks',
     variants: [],
     optionGroups: [],
+    drinks: [],
   },
   {
     id: '12',
@@ -246,5 +305,6 @@ export const products = [
     category: 'drinks',
     variants: [],
     optionGroups: [],
+    drinks: [],
   },
 ];

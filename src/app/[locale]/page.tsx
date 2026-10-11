@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Locale, locales } from '@/lib/i18n';
-import HomePageWrapper from './HomePageWrapper';
+import LandingClient from './LandingClient';
 
 interface PageProps {
   params: Promise<{ locale: Locale }>;
@@ -23,9 +23,9 @@ export function generateMetadata({ params }: { params: Promise<{ locale: Locale 
   });
 }
 
-export default async function HomePage({ params }: PageProps) {
+export default async function LandingPage({ params }: PageProps) {
   const { locale } = await params;
   if (!locales.includes(locale)) notFound();
 
-  return <HomePageWrapper locale={locale} />;
+  return <LandingClient locale={locale} />;
 }

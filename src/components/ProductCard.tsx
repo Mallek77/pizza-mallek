@@ -22,8 +22,9 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
   const dict = getDict(locale);
   const [imgSrc, setImgSrc] = useState<string>(product.image);
   const [hasError, setHasError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
-  // Inject styles on client side only
   useEffect(() => {
     const style = document.createElement('style');
     style.id = 'product-card-styles';
@@ -71,7 +72,6 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
     }
   };
 
-  // Get translated name and description
   const translationKey = product.translationKey || product.id;
   const displayName = product.translationKey ? dict[translationKey] || product.displayName : product.displayName;
   const description = product.translationKey ? dict[`${translationKey}_desc`] || product.description : product.description;
@@ -79,32 +79,30 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
   return (
     <article 
       className="product-card group relative overflow-hidden rounded-2xl"
-      style={{ containerName: 'product-card', containerType: 'inline-size' }}
+      style={{ containerName: 'product-card', containerType: 'inline-size', direction }}
+      dir={direction}
     >
-      {/* Image layer - simple, reliable */}
       <div className="absolute inset-0 z-0">
         <picture>
           <source srcSet={imgSrc} type="image/webp" />
           <img
             src={imgSrc.replace('.webp', '.jpg')}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            onLoad={() => setIsLoaded(true)}
             onError={handleError}
           />
         </picture>
-        {/* Overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
       </div>
 
-      {/* Content layer - description bottom-left, price bottom-right, button centered */}
       <div className="relative z-10 h-full flex flex-col">
-        {/* Spacer to push content to bottom */}
         <div className="flex-1" />
         
-        {/* Bottom content: description left, price right */}
         <div className="p-3 sm:p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          {/* Description bottom-left */}
-          <div className="text-left">
+          <div className={`text-left ${direction === 'rtl' ? 'text-right' : ''}`}>
             <h3 className="font-black text-white text-base sm:text-lg md:text-xl lg:text-2xl leading-tight truncate max-w-[80%]">
               {displayName}
             </h3>
@@ -113,7 +111,6 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
             </p>
           </div>
           
-          {/* Price bottom-right + Add button */}
           <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2 sm:gap-3 flex-shrink-0">
             <span className="text-white font-bold text-lg sm:text-xl md:text-2xl whitespace-nowrap">
               {product.price} <span className="text-base font-normal">DA</span>
@@ -121,7 +118,7 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
             <button
               onClick={() => onAddToCart(product)}
               className="btn-add-to-cart flex items-center justify-center gap-1.5 px-4 sm:px-5 md:px-6 py-2.5 md:py-3 rounded-full flex-shrink-0"
-              aria-label={`Ajouter ${displayName} au panier`}
+              aria-label={`${dict.addToCart} ${displayName}`}
             >
               <span className="icon-plus" aria-hidden="true">+</span>
               <span className="btn-text hidden sm:inline-block text-sm sm:text-base font-bold uppercase tracking-wide">

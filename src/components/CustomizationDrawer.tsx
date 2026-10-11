@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Locale, getDict } from '@/lib/i18n';
+import { Locale, getDict, dir } from '@/lib/i18n';
 
 interface CustomizationDrawerProps {
   locale: Locale;
@@ -23,8 +23,10 @@ export default function CustomizationDrawer({
   timeSlot
 }: CustomizationDrawerProps) {
   const dict = getDict(locale);
+  const direction = dir[locale];
   const [selectedVariant, setSelectedVariant] = useState<any>(product?.variants?.[0] || null);
   const [selectedOptions, setSelectedOptions] = useState<Record<string, Record<string, number>>>({});
+  const [selectedDrinks, setSelectedDrinks] = useState<Record<string, number>>({});
   const [quantity, setQuantity] = useState(1);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -42,15 +44,16 @@ export default function CustomizationDrawer({
   const optionGroups = product.optionGroups || [];
   const hasVariants = product.variants && product.variants.length > 0;
   
-  // 'quantity' is always the final step so the total / add-to-cart panel is reachable
   const steps = [
     ...(hasVariants ? ['variant'] : []),
     ...optionGroups.map((_g: any, i: number) => `option-${i}`),
+    'drinks',
     'quantity',
   ];
 
   const currentStepKey = steps[currentStep];
   const isVariantStep = currentStepKey === 'variant';
+  const isDrinkStep = currentStepKey === 'drinks';
   const isQuantityStep = currentStepKey === 'quantity';
   const currentOptionGroupIndex = (isVariantStep || isQuantityStep) ? -1 : parseInt(currentStepKey.replace('option-', ''));
   const currentOptionGroup = currentOptionGroupIndex >= 0 ? optionGroups[currentOptionGroupIndex] : null;
@@ -119,6 +122,31 @@ export default function CustomizationDrawer({
     }
   };
 
+  const incrementDrink = (drinkId: string) => {
+    setSelectedDrinks(prev => ({
+      ...prev,
+      [drinkId]: (prev[drinkId] || 0) + 1
+    }));
+  };
+
+  const decrementDrink = (drinkId: string) => {
+    setSelectedDrinks(prev => {
+      const currentQty = prev[drinkId] || 0;
+      if (currentQty <= 0) return prev;
+      const newDrinks = { ...prev };
+      if (currentQty === 1) {
+        delete newDrinks[drinkId];
+      } else {
+        newDrinks[drinkId] = currentQty - 1;
+      }
+      return newDrinks;
+    });
+  };
+
+  const getDrinkQuantity = (drinkId: string) => {
+    return selectedDrinks[drinkId] || 0;
+  };
+
   const goPrev = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
@@ -134,21 +162,20 @@ export default function CustomizationDrawer({
   const isFirstStep = currentStep === 0;
 
   return (
-    <div className={`fixed inset-0 z-50 flex ${isOpen ? 'flex' : 'hidden'}`}>
+    <div className={`fixed inset-0 z-50 flex ${isOpen ? 'flex' : 'hidden'}`} dir={direction}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="fixed inset-0 bg-bg-card flex flex-col animate-slide-up w-full max-w-2xl mx-auto">
-        {/* Header */}
+      <div className="fixed inset-0 bg-bg-card flex flex-col animate-slide-up w-full max-w-2xl mx-auto" dir={direction}>
         <div className="sticky top-0 bg-bg-card border-b border-border-subtle p-4 flex items-center justify-between z-10">
           <button 
             onClick={isFirstStep ? onClose : goPrev}
             className="text-text-muted text-2xl p-2 -ml-2" 
-            aria-label={isFirstStep ? dict.remove : 'Précédent'}
+            aria-label={isFirstStep ? dict.remove : dict.remove}
           >
             {isFirstStep ? '×' : '←'}
           </button>
           <div className="flex-1 text-center px-8">
-            <h3 className="font-bold text-text-cream truncate">{product.name}</h3>
+            <h3 className="font-bold text-text-cream truncate">{product.translationKey ? dict[product.translationKey] || product.displayName : product.displayName}</h3>
             <div className="flex justify-center gap-1 mt-1">
               {steps.map((_step, i) => (
                 <div
@@ -163,9 +190,7 @@ export default function CustomizationDrawer({
           <button onClick={onClose} className="text-text-muted text-2xl p-2 -mr-2" aria-label={dict.remove}>×</button>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 pb-24 space-y-6">
-          {/* Product Image */}
+        <div className="flex-1 overflow-y-auto p-4 pb-24 space-y-6" dir={direction}>
           <div className="relative">
             <img 
               src={product.image} 
@@ -179,7 +204,6 @@ export default function CustomizationDrawer({
             )}
           </div>
 
-          {/* Variant Selection Step */}
           {isVariantStep && (
             <div className="space-y-4">
               <h4 className="text-text-muted text-sm font-medium">{dict.size}</h4>
@@ -208,18 +232,19 @@ export default function CustomizationDrawer({
                 className="w-full btn-primary py-3 text-lg mt-4"
                 disabled={!selectedVariant}
               >
-                {isLastStep ? dict.addToCart : 'Suivant →'}
+                {isLastStep ? dict.addToCart : `${dict.addToCart} →`}
               </button>
             </div>
           )}
 
-          {/* Option Group Steps */}
           {currentOptionGroup && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h4 className="text-text-cream text-lg font-bold">{currentOptionGroup.name}</h4>
+                <h4 className="text-text-cream text-lg font-bold">
+                  {currentOptionGroup.translationKey ? dict[currentOptionGroup.translationKey] : currentOptionGroup.name}
+                </h4>
                 <span className="text-text-muted text-sm">
-                  Étape {currentStep + 1} / {steps.length}
+                  {dict.quantity}: {currentStep} / {steps.length}
                 </span>
               </div>
 
@@ -235,7 +260,9 @@ export default function CustomizationDrawer({
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="font-medium text-text-cream truncate">{opt.name}</span>
+                          <span className="font-medium text-text-cream truncate">
+                            {opt.translationKey ? dict[opt.translationKey] : opt.name}
+                          </span>
                           {opt.price_supplement > 0 && (
                             <span className="text-accent-cheese text-sm font-bold whitespace-nowrap">
                               +{opt.price_supplement} DA/unité
@@ -244,12 +271,11 @@ export default function CustomizationDrawer({
                         </div>
                         {opt.price_supplement > 0 && qty > 0 && (
                           <div className="text-xs text-text-muted mt-1">
-                            Sous-total: {opt.price_supplement * qty} DA
+                            {dict.total}: {opt.price_supplement * qty} DA
                           </div>
                         )}
                       </div>
 
-                      {/* Quantity Selector */}
                       <div className="flex items-center gap-3 flex-shrink-0">
                         <button
                           onClick={() => decrementOption(currentOptionGroup.id, opt.id)}
@@ -279,7 +305,6 @@ export default function CustomizationDrawer({
                 })}
               </div>
 
-              {/* Navigation */}
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={goPrev}
@@ -302,7 +327,81 @@ export default function CustomizationDrawer({
             </div>
           )}
 
-          {/* Final Step - Quantity & Total */}
+          {isDrinkStep && product.drinks && product.drinks.length > 0 && (
+            <div className="space-y-4">
+              <h4 className="text-text-muted text-sm font-medium">{dict.drinks || 'Boissons'}</h4>
+              <div className="space-y-3">
+                {product.drinks.map((drink: any) => {
+                  const qty = getDrinkQuantity(drink.id);
+                  return (
+                    <div
+                      key={drink.id}
+                      className="bg-bg-secondary rounded-2xl p-4 flex items-center justify-between gap-4"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-medium text-text-cream truncate">
+                            {drink.translationKey ? dict[drink.translationKey] : drink.name}
+                          </span>
+                          {drink.price > 0 && (
+                            <span className="text-accent-cheese text-sm font-bold whitespace-nowrap">
+                              +{drink.price} DA/unité
+                            </span>
+                          )}
+                        </div>
+                        {drink.price > 0 && qty > 0 && (
+                          <div className="text-xs text-text-muted mt-1">
+                            {dict.total}: {drink.price * qty} DA
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <button
+                          onClick={() => decrementDrink(drink.id)}
+                          className="w-12 h-12 rounded-xl bg-accent-orange text-white flex items-center justify-center text-2xl font-bold touch-target"
+                          disabled={qty <= 0}
+                          aria-label="Diminuer"
+                        >
+                          −
+                        </button>
+                        <div className="w-16 text-center">
+                          <span className="text-2xl font-bold text-text-cream">{qty}</span>
+                        </div>
+                        <button
+                          onClick={() => incrementDrink(drink.id)}
+                          className="w-12 h-12 rounded-xl bg-accent-orange text-white flex items-center justify-center text-2xl font-bold touch-target"
+                          aria-label="Augmenter"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={goPrev}
+                  className="flex-1 btn-secondary py-3"
+                  disabled={isFirstStep}
+                >
+                  ← {dict.remove}
+                </button>
+                <button
+                  onClick={goNext}
+                  className={`flex-1 py-3 rounded-xl font-bold text-lg transition-colors ${
+                    isLastStep
+                      ? 'bg-accent-cheese text-bg-primary'
+                      : 'bg-accent-orange text-white hover:bg-accent-tomato'
+                  }`}
+                >
+                  {isLastStep ? dict.addToCart : 'Suivant →'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {isQuantityStep && (
             <div className="space-y-4">
               <h4 className="text-text-muted text-sm font-medium">{dict.quantity}</h4>

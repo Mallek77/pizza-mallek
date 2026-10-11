@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Locale, getDict } from '@/lib/i18n';
+import { Locale, getDict, dir } from '@/lib/i18n';
 import { products } from '@/lib/products';
 import ProductCard from '@/components/ProductCard';
 import CustomizationDrawer from '@/components/CustomizationDrawer';
@@ -26,6 +26,7 @@ const categoryOrder = [
 
 export default function ProductGrid({ locale, orderType, timeSlot }: ProductGridProps) {
   const dict = getDict(locale);
+  const direction = dir[locale];
   const { cart, isCartOpen, addToCart, updateQuantity, removeItem, clearCart, openCart, closeCart } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -50,6 +51,7 @@ export default function ProductGrid({ locale, orderType, timeSlot }: ProductGrid
     closeCart();
     setIsCheckoutOpen(false);
   };
+
   const productsByCategory = categoryOrder.map(({ key, label }) => {
     const categoryProducts = products.filter(p => p.category === key);
     if (categoryProducts.length === 0) return null;
@@ -88,21 +90,30 @@ export default function ProductGrid({ locale, orderType, timeSlot }: ProductGrid
             grid-template-columns: repeat(4, 1fr);
           }
         }
-        /* Container query for card responsiveness */
         .category-grid > * {
           container-name: product-card;
           container-type: inline-size;
         }
+        .category-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .category-divider {
+          flex: 1;
+          height: 1px;
+          background: var(--border-subtle);
+        }
       `}</style>
 
-      <div className="space-y-8 pb-10">
+      <div className="space-y-8 pb-10" dir={direction}>
         {productsByCategory.map((cat: any) => (
           <section key={cat.key} className="space-y-4">
-            <header className="flex items-center gap-3 px-1">
+            <header className="category-header px-1">
               <span className="text-text-muted text-xs uppercase tracking-wider font-medium">
                 {cat.label}
               </span>
-              <div className="h-px flex-1 bg-border-subtle" />
+              <div className="category-divider" />
             </header>
             <div className="category-grid">
               {cat.products.map((product: any) => (

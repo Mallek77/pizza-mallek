@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Locale, getDict } from '@/lib/i18n';
+import { Locale, getDict, dir } from '@/lib/i18n';
 
 interface CheckoutModalProps {
   locale: Locale;
@@ -15,7 +15,6 @@ interface CheckoutModalProps {
 
 const RESTAURANT_PHONE = '+2135XXXXXXXX';
 const RESTAURANT_NAME = 'Mc Mallek';
-const RESTAURANT_ADDRESS = 'Draâ Ben Khedda, Tizi Ouzou, Algérie';
 
 export default function CheckoutModal({
   locale,
@@ -27,12 +26,14 @@ export default function CheckoutModal({
   onConfirm
 }: CheckoutModalProps) {
   const dict = getDict(locale);
+  const direction = dir[locale];
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
   const [sendMethod, setSendMethod] = useState<'sms' | 'whatsapp'>('whatsapp');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState('');
 
   const isTakeaway = orderType === 'emporter';
   const isDineIn = orderType === 'sur-place';
@@ -57,9 +58,26 @@ export default function CheckoutModal({
             Object.entries(quantities as Record<string, number>).forEach(([optId, qty]) => {
               const opt = group.options?.find((o: any) => o.id === optId);
               if (opt && qty > 0) {
-                lines.push(`   + ${opt.name} x${qty} (+${opt.price_supplement * qty} DA)`);
+                const optName = opt.translationKey ? dict[opt.translationKey] || opt.name : opt.name;
+                lines.push(`   + ${optName} x${qty} (+${opt.price_supplement * qty} DA)`);
               }
             });
+          }
+        });
+      }
+    });
+
+    // Add drinks if present
+    cart.forEach((item) => {
+      if (item.drinks) {
+        Object.entries(item.drinks).forEach(([drinkId, qty]) => {
+          const qtyNum = qty as number;
+          if (qtyNum > 0) {
+            const drink = item.product.drinks?.find((d: any) => d.id === drinkId);
+            if (drink) {
+              const drinkName = drink.translationKey ? dict[drink.translationKey] || drink.name : drink.name;
+              lines.push(`   🥤 ${drinkName} x${qtyNum} (+${drink.price * qtyNum} DA)`);
+            }
           }
         });
       }
@@ -102,9 +120,26 @@ export default function CheckoutModal({
     window.open(whatsappUrl, '_blank');
   };
 
+  const validateAlgerianPhone = (phone: string) => {
+    const cleaned = phone.replace(/\s+/g, '').replace(/^\+213/, '0').replace(/^00213/, '0');
+    return /^0[5679]\d{8}$/.test(cleaned);
+  };
+
   const handleSubmit = () => {
-    if (!customerName.trim() || !customerPhone.trim()) {
-      alert(dict.error);
+    setError('');
+    
+    if (!customerName.trim()) {
+      setError(dict.error + ': ' + dict.name + ' ' + (locale === 'ar' ? 'مطلوب' : locale === 'en' ? 'required' : 'requis'));
+      return;
+    }
+    
+    if (!customerPhone.trim() || !validateAlgerianPhone(customerPhone)) {
+      setError(dict.error + ': ' + (locale === 'ar' ? 'رقم هاتف جزائري غير صحيح' : locale === 'en' ? 'Invalid Algerian phone' : 'Numéro algérien invalide (05/06/07/09 + 8 chiffres)'));
+      return;
+    }
+    
+    if (isTakeaway && !customerAddress.trim()) {
+      setError(dict.error + ': ' + dict.address + ' ' + (locale === 'ar' ? 'مطلوب' : locale === 'en' ? 'required' : 'requis'));
       return;
     }
 
@@ -131,10 +166,10 @@ export default function CheckoutModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center" dir={direction}>
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       
-      <div className="relative bg-bg-card rounded-3xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto animate-slide-up">
+      <div className="relative bg-bg-card rounded-3xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto animate-slide-up" dir={direction}>
         <div className="sticky top-0 bg-bg-card border-b border-border-subtle p-4 flex items-center justify-between">
           <h3 className="text-lg font-bold text-text-cream">{dict.confirmOrder}</h3>
           <button onClick={onClose} className="text-text-muted text-2xl p-2">×</button>
@@ -152,6 +187,12 @@ export default function CheckoutModal({
           </div>
         ) : (
           <div className="p-4 space-y-4">
+            {error && (
+              <div className="bg-red-500/20 border border-red-500/50 text-red-300 px-4 py-3 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
+
             <div className="bg-bg-secondary rounded-2xl p-4">
               <h4 className="font-bold text-text-cream mb-3">{dict.orderDetails}</h4>
               <div className="space-y-2 max-h-48 overflow-y-auto">
@@ -195,6 +236,7 @@ export default function CheckoutModal({
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value)}
                   className="w-full bg-bg-secondary border border-border-subtle rounded-xl px-4 py-3 text-text-cream placeholder-text-muted focus:border-accent-orange focus:outline-none"
+                  required
                 />
               )}
             </div>
@@ -247,7 +289,7 @@ export default function CheckoutModal({
 
             <button
               onClick={handleSubmit}
-              disabled={isSubmitting || !customerName.trim() || !customerPhone.trim()}
+              disabled={isSubmitting}
               className="w-full btn-primary py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? dict.loading : isTakeaway ? `${dict.sendWhatsapp} / ${dict.sendSms}` : dict.confirmOrder}
