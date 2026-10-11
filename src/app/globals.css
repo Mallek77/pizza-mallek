@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+/* Mc Mallek - Street Food Premium */
+:root {
+  /* Charte graphique Mc Mallek */
+  --bg-primary: #121212;
+  --bg-secondary: #181818;
+  --bg-card: #1e1e1e;
+  --accent-orange: #FF5722;
+  --accent-tomato: #E64A19;
+  --accent-cheese: #FFB300;
+  --text-cream: #F5F5F0;
+  --text-muted: #b0b0b0;
+  --border-subtle: #2a2a2a;
+}
+
+@theme inline {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-card: var(--bg-card);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-tomato: var(--accent-tomato);
+  --color-accent-cheese: var(--accent-cheese);
+  --color-text-cream: var(--text-cream);
+  --color-text-muted: var(--text-muted);
+  --color-border-subtle: var(--border-subtle);
+}
+
+/* Support RTL */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] [dir="ltr"] {
+  direction: ltr;
+}
+
+/* Base typography - mobile first */
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-cream);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Police arabe */
+[dir="rtl"] body,
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] button,
+[dir="rtl"] input {
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-orange);
+  border-radius: 3px;
+}
+
+/* Animation drawer */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Focus visible pour accessibilité */
+*:focus-visible {
+  outline: 2px solid var(--accent-orange);
+  outline-offset: 2px;
+}
+
+/* Badge panier */
+.badge-cart {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--accent-orange);
+  color: white;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+  border: 2px solid var(--bg-primary);
+}
+
+/* Carte produit */
+.product-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 87, 34, 0.2);
+}
+
+/* Bouton principal */
+.btn-primary {
+  background: var(--accent-orange);
+  color: white;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: background 0.2s, transform 0.1s;
+}
+.btn-primary:hover {
+  background: var(--accent-tomato);
+}
+.btn-primary:active {
+  transform: scale(0.96);
+}
+
+/* Bouton secondaire */
+.btn-secondary {
+  background: transparent;
+  color: var(--text-cream);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  font-weight: 600;
+  transition: border-color 0.2s;
+}
+.btn-secondary:hover {
+  border-color: var(--accent-orange);
+}
+
+/* Safe area pour mobile */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Touch target minimum 44px */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Texte plus lisible sur mobile */
+@media (max-width: 640px) {
+  .text-xs { font-size: 0.75rem; }
+  .text-sm { font-size: 0.875rem; }
+  .text-base { font-size: 1rem; }
+  .text-lg { font-size: 1.125rem; }
+  .text-xl { font-size: 1.25rem; }
+  .text-2xl { font-size: 1.5rem; }
+  .text-3xl { font-size: 1.875rem; }
+}
