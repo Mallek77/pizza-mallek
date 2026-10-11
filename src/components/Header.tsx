@@ -32,7 +32,7 @@ export default function Header({ locale }: HeaderProps) {
         <Link href={`/${locale}`} className="flex items-center gap-2">
           <div 
             className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0 overflow-hidden"
-            style={{ backgroundImage: 'url(/logopizza.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+            style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
           >
             {!logoLoaded && (
               <span className="text-lg font-bold text-white">M</span>
