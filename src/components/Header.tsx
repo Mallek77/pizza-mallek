@@ -11,12 +11,31 @@ interface HeaderProps {
   locale: Locale;
 }
 
+// Inline SVG logo - tiny, no network request, scales perfectly
+const LogoIcon = () => (
+  <svg
+    width="36"
+    height="36"
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-full h-full"
+  >
+    <circle cx="50" cy="50" r="48" fill="#FF6B35"/>
+    <text x="50" y="62" fontFamily="system-ui, sans-serif" fontSize="54" fontWeight="900" fill="white" textAnchor="middle" dominantBaseline="middle">M</text>
+    <ellipse cx="50" cy="78" rx="22" ry="8" fill="#FFD700" opacity="0.3"/>
+  </svg>
+);
+
+interface HeaderProps {
+  locale: Locale;
+}
+
 export default function Header({ locale }: HeaderProps) {
   const dict = getDict(locale);
   const direction = dir[locale];
   const { cart, openCart } = useCart();
   const [mounted, setMounted] = useState(false);
-  const [logoLoaded, setLogoLoaded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -30,13 +49,8 @@ export default function Header({ locale }: HeaderProps) {
     <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-subtle" dir={direction}>
       <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
         <Link href={`/${locale}`} className="flex items-center gap-2">
-          <div 
-            className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0 overflow-hidden"
-            style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-          >
-            {!logoLoaded && (
-              <span className="text-lg font-bold text-white">M</span>
-            )}
+          <div className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0">
+            <LogoIcon />
           </div>
           <span className="text-lg font-bold text-text-cream hidden sm:block">
             {dict.brand}

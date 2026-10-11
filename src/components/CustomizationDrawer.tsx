@@ -204,6 +204,17 @@ export default function CustomizationDrawer({
             )}
           </div>
 
+          {/* Product Composition - Base Ingredients */}
+          <div className="bg-bg-secondary rounded-2xl p-4">
+            <h4 className="text-text-cream font-bold text-sm mb-3 flex items-center gap-2">
+              <span className="text-accent-orange">🍽️</span>
+              {dict.composition || 'Composition'}
+            </h4>
+            <p className="text-text-muted text-sm leading-relaxed">
+              {product.translationKey ? dict[`${product.translationKey}_desc`] || product.description : product.description}
+            </p>
+          </div>
+
           {isVariantStep && (
             <div className="space-y-4">
               <h4 className="text-text-muted text-sm font-medium">{dict.size}</h4>

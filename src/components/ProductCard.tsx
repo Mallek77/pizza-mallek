@@ -25,51 +25,28 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
   const [isLoaded, setIsLoaded] = useState(false);
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.id = 'product-card-styles';
-    style.textContent = `
-      @container product-card (max-width: 280px) {
-        .product-card { min-height: 420px; }
-        .btn-text { display: none !important; }
-      }
-      @container product-card (min-width: 281px) and (max-width: 380px) {
-        .product-card { min-height: 480px; }
-        .btn-text { display: none !important; }
-      }
-      @container product-card (min-width: 381px) and (max-width: 480px) {
-        .product-card { min-height: 560px; }
-        .btn-text { display: inline-block !important; }
-      }
-      @container product-card (min-width: 481px) {
-        .product-card { min-height: 640px; }
-        .btn-text { display: inline-block !important; }
-      }
-      .btn-add-to-cart {
-        background: var(--accent-orange); color: white; border: none;
-        font-weight: 700; border-radius: 999px; transition: all 0.15s ease;
-        min-height: 44px;
-      }
-      .btn-add-to-cart:hover { background: var(--accent-tomato); transform: translateY(-1px); }
-      .btn-add-to-cart:active { transform: scale(0.96); }
-      .btn-add-to-cart:focus-visible { outline: 2px solid var(--accent-cheese); outline-offset: 2px; }
-      .icon-plus { font-size: 1.25em; line-height: 1; display: flex; align-items: center; justify-content: center; }
-    `;
-    document.head.appendChild(style);
-    return () => { const s = document.getElementById('product-card-styles'); if (s) s.remove(); };
-  }, []);
-
-  const handleError = () => {
-    if (!hasError) {
-      setHasError(true);
-      setImgSrc('/images/placeholder.svg');
+  // Category-specific card styles
+  const getCardStyles = (category: string) => {
+    switch (category) {
+      case 'pizzas':
+        return 'aspect-[4/3] min-h-[200px]'; // Wide for pizzas
+      case 'burgers':
+        return 'aspect-[3/4] min-h-[280px]'; // Tall for burgers
+      case 'sandwiches':
+      case 'paninis':
+        return 'aspect-[1/1] min-h-[220px]'; // Square for sandwiches
+      case 'sides':
+        return 'aspect-[16/9] min-h-[160px]'; // Wide for sides
+      case 'drinks':
+        return 'aspect-[1/2] min-h-[240px]'; // Tall for drinks
+      default:
+        return 'aspect-[1/1] min-h-[200px]';
     }
   };
 
-  const fallbackToJpg = () => {
-    if (imgSrc.endsWith('.webp')) {
-      setImgSrc(imgSrc.replace('.webp', '.jpg'));
-    }
+  const handleError = () => {
+    setHasError(true);
+    setImgSrc('/images/placeholder.svg');
   };
 
   const translationKey = product.translationKey || product.id;
@@ -78,21 +55,18 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
 
   return (
     <article 
-      className="product-card group relative overflow-hidden rounded-2xl"
-      style={{ containerName: 'product-card', containerType: 'inline-size', direction }}
-      dir={direction}
+      className={`group relative overflow-hidden rounded-2xl ${getCardStyles(product.category)}`}
+      style={{ direction }}
     >
       <div className="absolute inset-0 z-0">
         <picture>
-          <source srcSet={imgSrc} type="image/webp" />
+          <source srcSet={product.image} type="image/webp" />
           <img
-            src={imgSrc.replace('.webp', '.jpg')}
+            src={product.image.replace('.webp', '.jpg')}
             alt={product.name}
-            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            onLoad={() => setIsLoaded(true)}
-            onError={handleError}
+            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+            loading="lazy"
+            onError={() => {}}
           />
         </picture>
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
@@ -104,10 +78,10 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
         <div className="p-3 sm:p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className={`text-left ${direction === 'rtl' ? 'text-right' : ''}`}>
             <h3 className="font-black text-white text-base sm:text-lg md:text-xl lg:text-2xl leading-tight truncate max-w-[80%]">
-              {displayName}
+              {product.translationKey ? dict[product.translationKey] || product.displayName : product.displayName}
             </h3>
             <p className="text-white/80 text-sm sm:text-base line-clamp-2 mt-1 max-w-[80%]">
-              {description}
+              {product.translationKey ? dict[`${product.translationKey}_desc`] || product.description : product.description}
             </p>
           </div>
           
@@ -117,12 +91,12 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
             </span>
             <button
               onClick={() => onAddToCart(product)}
-              className="btn-add-to-cart flex items-center justify-center gap-1.5 px-4 sm:px-5 md:px-6 py-2.5 md:py-3 rounded-full flex-shrink-0"
-              aria-label={`${dict.addToCart} ${displayName}`}
+              className="bg-accent-orange text-white px-4 sm:px-5 md:px-6 py-2.5 md:py-3 rounded-full font-bold uppercase tracking-wide text-sm sm:text-base transition-all hover:bg-accent-tomato active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-accent-cheese focus:ring-offset-2 focus:ring-offset-bg-primary"
+              aria-label={`${dict.addToCart} ${product.translationKey ? dict[product.translationKey] || product.displayName : product.displayName}`}
             >
-              <span className="icon-plus" aria-hidden="true">+</span>
-              <span className="btn-text hidden sm:inline-block text-sm sm:text-base font-bold uppercase tracking-wide">
-                {dict.addToCart}
+              <span className="flex items-center gap-1">
+                <span aria-hidden="true">+</span>
+                <span className="hidden sm:inline-block font-bold uppercase tracking-wide">{dict.addToCart}</span>
               </span>
             </button>
           </div>

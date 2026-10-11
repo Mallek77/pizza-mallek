@@ -67,6 +67,22 @@ function LandingContent({ locale }: LandingClientProps) {
     else if (step === 'orderType') setStep('language');
   };
 
+  // Inline SVG logo - tiny, no network request
+  const LogoIcon = ({ size = 96 }: { size?: number }) => (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full"
+    >
+      <circle cx="50" cy="50" r="48" fill="#FF6B35"/>
+      <text x="50" y="62" fontFamily="system-ui, sans-serif" fontSize="54" fontWeight="900" fill="white" textAnchor="middle" dominantBaseline="middle">M</text>
+      <ellipse cx="50" cy="78" rx="22" ry="8" fill="#FFD700" opacity="0.3"/>
+    </svg>
+  );
+
   if (step === 'language') {
     return (
       <main className="min-h-screen bg-bg-primary flex flex-col relative" dir={direction}>
@@ -83,7 +99,8 @@ function LandingContent({ locale }: LandingClientProps) {
         </div>
         
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-12">
-          <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-accent-orange flex items-center justify-center overflow-hidden" style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+          <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-accent-orange flex items-center justify-center overflow-hidden">
+            <LogoIcon size={96} />
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-text-cream mb-2 text-center">
             {dict.brand}
@@ -128,10 +145,9 @@ function LandingContent({ locale }: LandingClientProps) {
           <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-subtle">
             <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
               <Link href={`/${locale}`} className="flex items-center gap-2">
-                <div 
-                  className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0 overflow-hidden"
-                  style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                />
+                <div className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0">
+                  <LogoIcon size={36} />
+                </div>
                 <span className="text-lg font-bold text-text-cream hidden sm:block">{dict.brand}</span>
               </Link>
               <button onClick={goBack} className="text-text-muted text-2xl p-2" aria-label={dict.remove}>←</button>
@@ -199,10 +215,9 @@ function LandingContent({ locale }: LandingClientProps) {
         <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-subtle">
           <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
             <Link href={`/${locale}`} className="flex items-center gap-2">
-              <div 
-                className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0 overflow-hidden"
-                style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-              />
+              <div className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0">
+                <LogoIcon size={36} />
+              </div>
               <span className="text-lg font-bold text-text-cream hidden sm:block">{dict.brand}</span>
             </Link>
             <button onClick={goBack} className="text-text-muted text-2xl p-2" aria-label={dict.remove}>←</button>
@@ -250,6 +265,23 @@ function LandingContent({ locale }: LandingClientProps) {
         </main>
       </div>
     </main>
+  );
+}
+
+function LogoIcon({ size = 96 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full"
+    >
+      <circle cx="50" cy="50" r="48" fill="#FF6B35"/>
+      <text x="50" y="62" fontFamily="system-ui, sans-serif" fontSize="54" fontWeight="900" fill="white" textAnchor="middle" dominantBaseline="middle">M</text>
+      <ellipse cx="50" cy="78" rx="22" ry="8" fill="#FFD700" opacity="0.3"/>
+    </svg>
   );
 }
 

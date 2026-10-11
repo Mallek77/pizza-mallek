@@ -68,6 +68,7 @@ const dictionaries: Record<Locale, Record<string, string>> = {
     customerInfo: 'Vos informations',
     name: 'Nom',
     cancel: 'Annuler',
+    composition: 'Composition',
     // Order types
     orderTypeLabel: 'Type de commande',
     timeSlotLabel: 'Créneau horaire',
@@ -170,6 +171,7 @@ const dictionaries: Record<Locale, Record<string, string>> = {
     customerInfo: 'معلوماتك',
     name: 'الاسم',
     cancel: 'إلغاء',
+    composition: 'التكوين',
     // Order types
     orderTypeLabel: 'نوع الطلب',
     timeSlotLabel: 'الوقت المقدر',
@@ -272,6 +274,7 @@ const dictionaries: Record<Locale, Record<string, string>> = {
     customerInfo: 'Your info',
     name: 'Name',
     cancel: 'Cancel',
+    composition: 'Ingredients',
     // Order types
     orderTypeLabel: 'Order type',
     timeSlotLabel: 'Time slot',
