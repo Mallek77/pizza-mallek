@@ -46,8 +46,10 @@ function LandingContent({ locale }: LandingClientProps) {
   if (!mounted) return null;
 
   const handleLocaleSelect = (newLocale: Locale) => {
-    // Use replace to force navigation even for same path with different query
-    router.replace(`/${newLocale}?step=orderType`);
+    // Force full navigation for cross-locale or same locale with query change
+    if (typeof window !== 'undefined') {
+      window.location.href = `/${newLocale}?step=orderType`;
+    }
   };
 
   const handleOrderTypeSelect = (type: 'emporter' | 'sur-place') => {
