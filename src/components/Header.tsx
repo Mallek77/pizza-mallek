@@ -30,7 +30,7 @@ export default function Header({ locale }: HeaderProps) {
       <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
         <Link href={`/${locale}`} className="flex items-center gap-2">
           <img 
-            src="/logo.png" 
+            src="/logopizza.png" 
             alt={dict.brand} 
             className="w-9 h-9 rounded-full object-cover"
           />
