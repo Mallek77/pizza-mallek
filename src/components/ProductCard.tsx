@@ -91,13 +91,10 @@ export default function ProductCard({ locale, product, onAddToCart }: ProductCar
             </span>
             <button
               onClick={() => onAddToCart(product)}
-              className="bg-accent-orange text-white px-4 sm:px-5 md:px-6 py-2.5 md:py-3 rounded-full font-bold uppercase tracking-wide text-sm sm:text-base transition-all hover:bg-accent-tomato active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-accent-cheese focus:ring-offset-2 focus:ring-offset-bg-primary"
+              className="bg-accent-orange text-white px-4 sm:px-5 md:px-6 py-2.5 md:py-3 rounded-full font-bold transition-all hover:bg-accent-tomato active:scale-[0.96] focus:outline-none focus:ring-2 focus:ring-accent-cheese focus:ring-offset-2 focus:ring-offset-bg-primary"
               aria-label={`${dict.addToCart} ${product.translationKey ? dict[product.translationKey] || product.displayName : product.displayName}`}
             >
-              <span className="flex items-center gap-1">
-                <span aria-hidden="true">+</span>
-                <span className="hidden sm:inline-block font-bold uppercase tracking-wide">{dict.addToCart}</span>
-              </span>
+              <span className="text-lg" aria-hidden="true">+</span>
             </button>
           </div>
         </div>
