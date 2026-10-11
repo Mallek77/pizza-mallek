@@ -71,9 +71,8 @@ function LandingContent({ locale }: LandingClientProps) {
     return (
       <main className="min-h-screen bg-bg-primary flex flex-col" dir={direction}>
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
-          <div className="w-24 h-24 mx-auto mb-8">
-            <img src="/logopizza.png" alt="Mc Mallek" className="w-full h-full object-cover rounded-full" />
-          </div>
+          <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-accent-orange flex items-center justify-center overflow-hidden" style={{ backgroundImage: 'url(/logopizza.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+</div>
           <h1 className="text-3xl sm:text-4xl font-black text-text-cream mb-2 text-center">
             {dict.brand}
           </h1>
@@ -104,7 +103,10 @@ function LandingContent({ locale }: LandingClientProps) {
         <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-subtle">
           <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
             <Link href={`/${locale}`} className="flex items-center gap-2">
-              <img src="/logopizza.png" alt={dict.brand} className="w-9 h-9 rounded-full object-cover" />
+              <div 
+                className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0 overflow-hidden"
+                style={{ backgroundImage: 'url(/logopizza.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+              />
               <span className="text-lg font-bold text-text-cream hidden sm:block">{dict.brand}</span>
             </Link>
             <button onClick={goBack} className="text-text-muted text-2xl p-2" aria-label={dict.remove}>←</button>
