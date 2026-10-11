@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Locale, getDict, dir, locales } from '@/lib/i18n';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 interface LandingClientProps {
   locale: Locale;
@@ -21,13 +22,20 @@ const timeSlots = [
   { value: '60', label: '60 min' },
 ];
 
-export default function LandingClient({ locale }: LandingClientProps) {
+function LandingContent({ locale }: LandingClientProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const dict = getDict(locale);
   const direction = dir[locale];
   const [mounted, setMounted] = useState(false);
-  const [step, setStep] = useState<'language' | 'orderType' | 'timeSlot'>('language');
+  const [step, setStep] = useState<'language' | 'orderType' | 'timeSlot'>(() => {
+    if (typeof window !== 'undefined') {
+      const urlStep = new URLSearchParams(window.location.search).get('step');
+      if (urlStep === 'orderType' || urlStep === 'timeSlot') return urlStep as 'orderType' | 'timeSlot';
+    }
+    return 'language';
+  });
   const [orderType, setOrderType] = useState<'emporter' | 'sur-place' | null>(null);
   const [timeSlot, setTimeSlot] = useState('30');
 
@@ -37,10 +45,8 @@ export default function LandingClient({ locale }: LandingClientProps) {
 
   if (!mounted) return null;
 
-  const switchLocale = (newLocale: Locale) => {
-    const segments = pathname.split('/').filter(Boolean);
-    const rest = segments.slice(1).join('/');
-    router.push(`/${newLocale}/${rest}`);
+  const handleLocaleSelect = (newLocale: Locale) => {
+    router.push(`/${newLocale}?step=orderType`);
   };
 
   const handleOrderTypeSelect = (type: 'emporter' | 'sur-place') => {
@@ -79,7 +85,7 @@ export default function LandingClient({ locale }: LandingClientProps) {
             {locales.map(l => (
               <button
                 key={l}
-                onClick={() => switchLocale(l)}
+                onClick={() => handleLocaleSelect(l)}
                 className="flex-1 flex flex-col items-center gap-3 p-6 bg-bg-card border-2 rounded-2xl transition-all hover:border-accent-orange hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="text-5xl" aria-hidden="true">{localeData[l].flag}</span>
@@ -199,5 +205,13 @@ export default function LandingClient({ locale }: LandingClientProps) {
         </div>
       </main>
     </main>
+  );
+}
+
+export default function LandingClient({ locale }: LandingClientProps) {
+  return (
+    <Suspense fallback={null}>
+      <LandingContent locale={locale} />
+    </Suspense>
   );
 }
