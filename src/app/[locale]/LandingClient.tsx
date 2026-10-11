@@ -69,10 +69,22 @@ function LandingContent({ locale }: LandingClientProps) {
 
   if (step === 'language') {
     return (
-      <main className="min-h-screen bg-bg-primary flex flex-col" dir={direction}>
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+      <main className="min-h-screen bg-bg-primary flex flex-col relative" dir={direction}>
+        {/* Background image with dark overlay */}
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ 
+              backgroundImage: 'url(/images/pizza-4-fromages.webp)',
+              opacity: 0.15
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/95 to-black/95" />
+        </div>
+        
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-12">
           <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-accent-orange flex items-center justify-center overflow-hidden" style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-</div>
+          </div>
           <h1 className="text-3xl sm:text-4xl font-black text-text-cream mb-2 text-center">
             {dict.brand}
           </h1>
@@ -99,7 +111,91 @@ function LandingContent({ locale }: LandingClientProps) {
 
   if (step === 'orderType') {
     return (
-      <main className="min-h-screen bg-bg-primary flex flex-col" dir={direction}>
+      <main className="min-h-screen bg-bg-primary flex flex-col relative" dir={direction}>
+        {/* Background image with dark overlay */}
+        <div className="absolute inset-0 z-0" aria-hidden="true">
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ 
+              backgroundImage: 'url(/images/pizza-poulet.webp)',
+              opacity: 0.12
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/95 to-black/95" />
+        </div>
+        
+        <div className="relative z-10 flex-1 flex flex-col">
+          <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-subtle">
+            <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
+              <Link href={`/${locale}`} className="flex items-center gap-2">
+                <div 
+                  className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0 overflow-hidden"
+                  style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                />
+                <span className="text-lg font-bold text-text-cream hidden sm:block">{dict.brand}</span>
+              </Link>
+              <button onClick={goBack} className="text-text-muted text-2xl p-2" aria-label={dict.remove}>←</button>
+            </div>
+          </header>
+
+          <main className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-12">
+            <h1 className="text-2xl sm:text-3xl font-black text-text-cream mb-3 text-center">
+              {locale === 'ar' ? 'كيف تريد الطلب؟' : locale === 'en' ? 'How to order?' : 'Comment souhaitez-vous commander ?'}
+            </h1>
+            <p className="text-text-muted text-center mb-8 max-w-md mx-auto">
+              {locale === 'ar' ? 'اختر طريقة الاستلام' : locale === 'en' ? 'Choose pickup method' : 'Choisissez votre mode de retrait'}
+            </p>
+
+            <div className="w-full max-w-md space-y-4">
+              <button
+                onClick={() => handleOrderTypeSelect('emporter')}
+                className="w-full bg-bg-card border-2 border-border-subtle rounded-2xl p-6 flex items-center gap-4 hover:border-accent-orange transition-all active:scale-[0.98] text-left"
+              >
+                <div className="w-14 h-14 rounded-xl bg-accent-orange/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-3xl">📦</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-bold text-text-cream truncate">{dict.takeawayTitle}</h3>
+                  <p className="text-text-muted text-sm truncate">{dict.takeawayDesc}</p>
+                </div>
+                <span className="text-accent-orange text-2xl flex-shrink-0">→</span>
+              </button>
+
+              <button
+                onClick={() => handleOrderTypeSelect('sur-place')}
+                className="w-full bg-bg-card border-2 border-border-subtle rounded-2xl p-6 flex items-center gap-4 hover:border-accent-cheese transition-all active:scale-[0.98] text-left"
+              >
+                <div className="w-14 h-14 rounded-xl bg-accent-cheese/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-3xl">🍽️</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-bold text-text-cream truncate">{dict.dineTitle}</h3>
+                  <p className="text-text-muted text-sm truncate">{dict.dineDesc}</p>
+                </div>
+                <span className="text-accent-cheese text-2xl flex-shrink-0">→</span>
+              </button>
+            </div>
+          </main>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-bg-primary flex flex-col relative" dir={direction}>
+      {/* Background image with dark overlay */}
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ 
+            backgroundImage: 'url(/images/burger-classic.webp)',
+            opacity: 0.12
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/95 to-black/95" />
+      </div>
+      
+      <div className="relative z-10 flex-1 flex flex-col">
         <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-subtle">
           <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
             <Link href={`/${locale}`} className="flex items-center gap-2">
@@ -115,100 +211,44 @@ function LandingContent({ locale }: LandingClientProps) {
 
         <main className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-12">
           <h1 className="text-2xl sm:text-3xl font-black text-text-cream mb-3 text-center">
-            {locale === 'ar' ? 'كيف تريد الطلب؟' : locale === 'en' ? 'How to order?' : 'Comment souhaitez-vous commander ?'}
+            {locale === 'ar' ? 'متى تريد الحضور؟' : locale === 'en' ? 'When to come?' : 'Pour quand ?'}
           </h1>
           <p className="text-text-muted text-center mb-8 max-w-md mx-auto">
-            {locale === 'ar' ? 'اختر طريقة الاستلام' : locale === 'en' ? 'Choose pickup method' : 'Choisissez votre mode de retrait'}
+            {locale === 'ar' ? 'اختر وقت الوصول' : locale === 'en' ? 'Choose arrival time' : 'Choisissez votre créneau'}
           </p>
 
           <div className="w-full max-w-md space-y-4">
-            <button
-              onClick={() => handleOrderTypeSelect('emporter')}
-              className="w-full bg-bg-card border-2 border-border-subtle rounded-2xl p-6 flex items-center gap-4 hover:border-accent-orange transition-all active:scale-[0.98] text-left"
-            >
-              <div className="w-14 h-14 rounded-xl bg-accent-orange/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-3xl">📦</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-text-cream truncate">{dict.takeawayTitle}</h3>
-                <p className="text-text-muted text-sm truncate">{dict.takeawayDesc}</p>
-              </div>
-              <span className="text-accent-orange text-2xl flex-shrink-0">→</span>
-            </button>
+            <div className="flex gap-3 justify-center mb-4">
+              {timeSlots.map(slot => (
+                <button
+                  key={slot.value}
+                  onClick={() => setTimeSlot(slot.value)}
+                  className={`px-6 py-3 rounded-xl font-bold text-base transition-all min-w-[80px] ${
+                    timeSlot === slot.value
+                      ? 'bg-accent-cheese text-bg-primary shadow-lg shadow-accent-cheese/30'
+                      : 'bg-bg-secondary text-text-cream border border-border-subtle hover:border-accent-cheese'
+                  }`}
+                >
+                  {slot.label}
+                </button>
+              ))}
+            </div>
 
             <button
-              onClick={() => handleOrderTypeSelect('sur-place')}
-              className="w-full bg-bg-card border-2 border-border-subtle rounded-2xl p-6 flex items-center gap-4 hover:border-accent-cheese transition-all active:scale-[0.98] text-left"
+              onClick={handleConfirmTime}
+              className="w-full bg-accent-cheese text-bg-primary py-3.5 rounded-xl font-bold text-lg hover:bg-yellow-500 transition-colors"
             >
-              <div className="w-14 h-14 rounded-xl bg-accent-cheese/20 flex items-center justify-center flex-shrink-0">
-                <span className="text-3xl">🍽️</span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-bold text-text-cream truncate">{dict.dineTitle}</h3>
-                <p className="text-text-muted text-sm truncate">{dict.dineDesc}</p>
-              </div>
-              <span className="text-accent-cheese text-2xl flex-shrink-0">→</span>
+              {locale === 'ar' ? 'تأكيد' : locale === 'en' ? 'Confirm' : 'Confirmer'}
+            </button>
+            <button
+              onClick={goBack}
+              className="w-full border-2 border-border-subtle text-text-cream py-3 rounded-xl font-medium mt-2 hover:border-accent-cheese transition-colors"
+            >
+              {locale === 'ar' ? 'رجوع' : locale === 'en' ? 'Back' : 'Retour'}
             </button>
           </div>
         </main>
-      </main>
-    );
-  }
-
-  return (
-    <main className="min-h-screen bg-bg-primary flex flex-col" dir={direction}>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-bg-primary/95 backdrop-blur-sm border-b border-border-subtle">
-        <div className="container mx-auto px-3 py-2.5 flex items-center justify-between">
-<Link href={`/${locale}`} className="flex items-center gap-2">
-              <div 
-                className="w-9 h-9 rounded-full bg-accent-orange flex items-center justify-center flex-shrink-0 overflow-hidden"
-                style={{ backgroundImage: 'url(/logo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-              />
-              <span className="text-lg font-bold text-text-cream hidden sm:block">{dict.brand}</span>
-            </Link>
-          <button onClick={goBack} className="text-text-muted text-2xl p-2" aria-label={dict.remove}>←</button>
-        </div>
-      </header>
-
-      <main className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-12">
-        <h1 className="text-2xl sm:text-3xl font-black text-text-cream mb-3 text-center">
-          {locale === 'ar' ? 'متى تريد الحضور؟' : locale === 'en' ? 'When to come?' : 'Pour quand ?'}
-        </h1>
-        <p className="text-text-muted text-center mb-8 max-w-md mx-auto">
-          {locale === 'ar' ? 'اختر وقت الوصول' : locale === 'en' ? 'Choose arrival time' : 'Choisissez votre créneau'}
-        </p>
-
-        <div className="w-full max-w-md space-y-4">
-          <div className="flex gap-3 justify-center mb-4">
-            {timeSlots.map(slot => (
-              <button
-                key={slot.value}
-                onClick={() => setTimeSlot(slot.value)}
-                className={`px-6 py-3 rounded-xl font-bold text-base transition-all min-w-[80px] ${
-                  timeSlot === slot.value
-                    ? 'bg-accent-cheese text-bg-primary shadow-lg shadow-accent-cheese/30'
-                    : 'bg-bg-secondary text-text-cream border border-border-subtle hover:border-accent-cheese'
-                }`}
-              >
-                {slot.label}
-              </button>
-            ))}
-          </div>
-
-          <button
-            onClick={handleConfirmTime}
-            className="w-full bg-accent-cheese text-bg-primary py-3.5 rounded-xl font-bold text-lg hover:bg-yellow-500 transition-colors"
-          >
-            {locale === 'ar' ? 'تأكيد' : locale === 'en' ? 'Confirm' : 'Confirmer'}
-          </button>
-          <button
-            onClick={goBack}
-            className="w-full border-2 border-border-subtle text-text-cream py-3 rounded-xl font-medium mt-2 hover:border-accent-cheese transition-colors"
-          >
-            {locale === 'ar' ? 'رجوع' : locale === 'en' ? 'Back' : 'Retour'}
-          </button>
-        </div>
-      </main>
+      </div>
     </main>
   );
 }
